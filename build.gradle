@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group 'todoist.org'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.seleniumhq.selenium:selenium-chrome-driver:3.141.59'
+    testImplementation 'org.testng:testng:7.3.0'
+    implementation 'com.google.guava:guava:30.1-jre'
+    implementation 'org.seleniumhq.selenium:selenium-support:3.141.59'
+}
+
+test {
+    useTestNG()
+}
