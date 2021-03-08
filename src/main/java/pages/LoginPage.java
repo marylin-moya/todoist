@@ -1,6 +1,5 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
@@ -19,8 +18,7 @@ public class LoginPage extends BasePage {
     @CacheLookup
     WebElement loginButton;
 
-    public LoginPage(WebDriver driver) {
-        super(driver);
+    public LoginPage() {
         PageFactory.initElements(driver, this);
     }
 
@@ -34,6 +32,6 @@ public class LoginPage extends BasePage {
 
     public HomePage clickLoginButton() {
         loginButton.click();
-        return new HomePage(driver);
+        return new HomePage();
     }
 }

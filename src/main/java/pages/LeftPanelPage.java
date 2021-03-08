@@ -1,7 +1,5 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
@@ -12,13 +10,12 @@ public class LeftPanelPage extends BasePage {
     @CacheLookup
     WebElement addProject;
 
-    public LeftPanelPage(WebDriver driver) {
-        super(driver);
+    public LeftPanelPage() {
         PageFactory.initElements(driver, this);
     }
 
     public AddProjectModalPage clickAddProject() {
         addProject.click();
-        return new AddProjectModalPage(driver);
+        return new AddProjectModalPage();
     }
 }

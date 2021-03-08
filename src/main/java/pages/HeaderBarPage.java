@@ -12,8 +12,7 @@ public class HeaderBarPage extends BasePage {
     @CacheLookup
     WebElement settings;
 
-    public HeaderBarPage(WebDriver driver) {
-        super(driver);
+    public HeaderBarPage() {
         PageFactory.initElements(driver, this);
     }
 

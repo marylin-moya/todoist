@@ -1,6 +1,5 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
@@ -15,8 +14,7 @@ public class AddProjectModalPage extends BasePage {
     @CacheLookup
     WebElement addButton;
 
-    public AddProjectModalPage(WebDriver driver) {
-        super(driver);
+    public AddProjectModalPage() {
         PageFactory.initElements(driver, this);
     }
 
@@ -27,6 +25,6 @@ public class AddProjectModalPage extends BasePage {
 
     public HomePage clickAddButton() {
         addButton.click();
-        return new HomePage(driver);
+        return new HomePage();
     }
 }
