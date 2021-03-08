@@ -1,27 +1,39 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage extends BasePage {
-    private By emailBy = By.id("email");
-    private By passwordBy = By.id("password");
-    private By loginBy = By.cssSelector("button.submit_btn");
+    @FindBy(id = "email")
+    @CacheLookup
+    WebElement emailInput;
+
+    @FindBy(id = "password")
+    @CacheLookup
+    WebElement passwordInput;
+
+    @FindBy(css = "button.submit_btn")
+    @CacheLookup
+    WebElement loginButton;
 
     public LoginPage(WebDriver driver) {
         super(driver);
+        PageFactory.initElements(driver, this);
     }
 
     public void setEmail(String email) {
-        driver.findElement(emailBy).sendKeys(email);
+        emailInput.sendKeys(email);
     }
 
     public void setPassword(String password) {
-        driver.findElement(passwordBy).sendKeys(password);
+        passwordInput.sendKeys(password);
     }
 
     public HomePage clickLoginButton() {
-        driver.findElement(loginBy).click();
+        loginButton.click();
         return new HomePage(driver);
     }
 }
