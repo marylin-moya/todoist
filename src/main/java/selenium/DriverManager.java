@@ -3,6 +3,7 @@ package selenium;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.ConfigProperties;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,12 +25,12 @@ public class DriverManager {
     }
 
     private void initialize() {
-        System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", ConfigProperties.getInstance().getChromeDriver());
         driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(ConfigProperties.getInstance().getImplicitTime(), TimeUnit.SECONDS);
         driver.manage().window().maximize();
 
-        wait = new WebDriverWait(driver, 10);
+        wait = new WebDriverWait(driver, ConfigProperties.getInstance().getExplicitTime());
     }
 
     public WebDriver getDriver() {
