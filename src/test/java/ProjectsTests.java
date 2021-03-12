@@ -12,7 +12,7 @@ public class ProjectsTests extends BaseTest {
         loginPage.setPassword("Password123");
         HomePage homePage = loginPage.clickLoginButton();
         Thread.sleep(3000);
-        AddProjectModalPage addProjectModalPage = homePage.leftPanelPage.clickAddProject();
+        AddProjectModalPage addProjectModalPage = homePage.leftPanelPage.clickQuickAddProject();
         Thread.sleep(3000);
         addProjectModalPage.setProjectName(projectName);
         Thread.sleep(3000);
