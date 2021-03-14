@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static utils.Constants.*;
+
 public class ConfigProperties {
     private static ConfigProperties instance;
 
@@ -28,11 +30,11 @@ public class ConfigProperties {
     private void initialize() {
         properties = new Properties();
         try {
-            InputStream inputStream = new FileInputStream("src\\main\\resources\\config.properties");
+            InputStream inputStream = new FileInputStream(MAIN_RESOURCES_PATH + CONFIG_PROPERTIES);
             properties.load(inputStream);
-            chromeDriver = properties.getProperty("chromeDriver");
-            implicitTime = Integer.parseInt(properties.getProperty("implicitTime"));
-            explicitTime = Integer.parseInt(properties.getProperty("explicitTime"));
+            chromeDriver = properties.getProperty(CHROME_DRIVER);
+            implicitTime = Integer.parseInt(properties.getProperty(IMPLICIT_TIME));
+            explicitTime = Integer.parseInt(properties.getProperty(EXPLICIT_TIME));
         } catch (IOException e) {
             e.printStackTrace();
         }

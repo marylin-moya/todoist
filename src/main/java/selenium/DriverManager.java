@@ -4,8 +4,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.ConfigProperties;
+import utils.GradleProperties;
 
 import java.util.concurrent.TimeUnit;
+
+import static utils.Constants.*;
 
 public class DriverManager {
     private static DriverManager instance = null;
@@ -25,8 +28,15 @@ public class DriverManager {
     }
 
     private void initialize() {
-        System.setProperty("webdriver.chrome.driver", ConfigProperties.getInstance().getChromeDriver());
-        driver = new ChromeDriver();
+        if (GradleProperties.getInstance().getBrowser().equals(CHROME)) {
+            System.out.println("Configure Chrome Driver");
+            System.setProperty(CHROME_WEBDRIVER, ConfigProperties.getInstance().getChromeDriver());
+            driver = new ChromeDriver();
+        }
+
+        if (GradleProperties.getInstance().getBrowser().equals(FIREFOX)) {
+            //Code for firefox
+        }
         driver.manage().timeouts().implicitlyWait(ConfigProperties.getInstance().getImplicitTime(), TimeUnit.SECONDS);
         driver.manage().window().maximize();
 
