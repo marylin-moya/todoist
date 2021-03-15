@@ -1,26 +1,58 @@
-import org.openqa.selenium.WebDriver;
+import org.apache.log4j.Logger;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import pages.AddProjectModalPage;
 import pages.HomePage;
 import pages.LoginPage;
 import selenium.DriverManager;
 import utils.GradleProperties;
 
 public class BaseTest {
-    private WebDriver driver;
     protected LoginPage loginPage;
     protected HomePage homePage;
+    public Logger log = Logger.getLogger(getClass());
 
-    @BeforeClass
+    @BeforeMethod(alwaysRun = true)
     public void setUp() {
-        System.out.println("BeforeClass - Setup");
+        log.info("Load Todoist page - (BeforeClass - Setup)");
         DriverManager.getInstance().setUrl(GradleProperties.getInstance().getSite());
         loginPage = new LoginPage();
     }
 
-    @AfterClass
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
-        System.out.println("AfterClass - tearDown");
+        log.info("Close browser - (AfterClass - tearDown)");
         DriverManager.getInstance().quitDriver();
+    }
+
+    @BeforeMethod(onlyForGroups = {"projects"}, dependsOnMethods = {"setUp"})
+    public void loginSite() {
+        log.info("Login to Todoist site - (BeforeMethod - loginSite)");
+        loginPage.setEmail(GradleProperties.getInstance().getEmail());
+        loginPage.setPassword(GradleProperties.getInstance().getPassword());
+        homePage = loginPage.clickLoginButton();
+    }
+
+    @BeforeMethod(onlyForGroups = {"createProject"}, dependsOnMethods = {"loginSite"})
+    public void createProject() {
+        log.info("Create Project - (BeforeMethod - createProject)");
+        AddProjectModalPage addProjectModalPage = homePage.leftPanelPage.clickQuickAddProject();
+        addProjectModalPage.setProjectName("my project");
+        homePage = addProjectModalPage.clickAddButton();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterMethod(onlyForGroups = {"deleteProject"})
+    public void deleteProject() throws InterruptedException {
+        log.info("Delete project - (AfterMethod - delete project)");
+        homePage.leftPanelPage.clickProjectMenu("my project");
+        homePage.leftPanelPage.selectDeleteOption();
+        homePage.leftPanelPage.clickDeleteButton();
     }
 }

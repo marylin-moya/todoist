@@ -1,9 +1,12 @@
 package utils;
 
+import org.apache.log4j.Logger;
+
 import static utils.Constants.*;
 
 public class GradleProperties {
     private static GradleProperties instance;
+    public Logger log = Logger.getLogger(getClass());
     private String browser;
     private String site;
     private String email;
@@ -21,6 +24,7 @@ public class GradleProperties {
     }
 
     private void initialize() {
+        log.info("Initialize Gradle Properties");
         browser = System.getProperty(BROWSER);
         site = System.getProperty(SITE);
         email = System.getProperty(EMAIL);

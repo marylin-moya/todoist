@@ -1,3 +1,4 @@
+import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import utils.GradleProperties;
@@ -5,8 +6,11 @@ import utils.GradleProperties;
 import static org.testng.Assert.assertTrue;
 
 public class LoginTests extends BaseTest {
-    @Test
+    public Logger log = Logger.getLogger(getClass());
+
+    @Test(groups = {"login"})
     public void testLogin() {
+        log.info("Test Successful Login");
         loginPage.setEmail(GradleProperties.getInstance().getEmail());
         loginPage.setPassword(GradleProperties.getInstance().getPassword());
         HomePage homePage = loginPage.clickLoginButton();

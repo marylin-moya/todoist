@@ -1,5 +1,7 @@
 package utils;
 
+import org.apache.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +11,7 @@ import static utils.Constants.*;
 
 public class ConfigProperties {
     private static ConfigProperties instance;
-
+    public Logger log = Logger.getLogger(getClass());
     private Properties properties;
 
     private String chromeDriver;
@@ -28,6 +30,7 @@ public class ConfigProperties {
     }
 
     private void initialize() {
+        log.info("Initialize Config Properties");
         properties = new Properties();
         try {
             InputStream inputStream = new FileInputStream(MAIN_RESOURCES_PATH + CONFIG_PROPERTIES);
@@ -36,7 +39,8 @@ public class ConfigProperties {
             implicitTime = Integer.parseInt(properties.getProperty(IMPLICIT_TIME));
             explicitTime = Integer.parseInt(properties.getProperty(EXPLICIT_TIME));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error getting info of file: " + CONFIG_PROPERTIES);
+            log.error(e.getStackTrace());
         }
     }
 

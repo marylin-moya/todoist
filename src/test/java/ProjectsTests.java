@@ -1,39 +1,48 @@
+import org.apache.log4j.Logger;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.AddProjectModalPage;
+import pages.ContentAreaPage;
 import utils.GradleProperties;
 
 import static org.testng.Assert.assertTrue;
 
 public class ProjectsTests extends BaseTest {
-    @Test
+    public Logger log = Logger.getLogger(getClass());
+
+    @Test(groups = {"projects","deleteProject"})
     public void testCreateProject() throws InterruptedException {
-        System.out.println("Test Method");
+        log.info("Test Create Project");
         String projectName = "my project";
 
-        Thread.sleep(3000);
         AddProjectModalPage addProjectModalPage = homePage.leftPanelPage.clickQuickAddProject();
-        Thread.sleep(3000);
         addProjectModalPage.setProjectName(projectName);
-        Thread.sleep(3000);
         homePage = addProjectModalPage.clickAddButton();
-        Thread.sleep(3000);
         assertTrue(homePage.contentAreaPage.isProjectNameDisplayed(projectName));
     }
 
-    @BeforeMethod
-    public void loginSite() {
-        System.out.println("BeforeMethod - loginSite");
-        loginPage.setEmail(GradleProperties.getInstance().getEmail());
-        loginPage.setPassword(GradleProperties.getInstance().getPassword());
-        homePage = loginPage.clickLoginButton();
+    @Test(groups = {"projects", "createProject"})
+    public void testDeleteProject() throws InterruptedException {
+        homePage.leftPanelPage.clickProjectMenu("my project");
+        homePage.leftPanelPage.selectDeleteOption();
+        homePage.leftPanelPage.clickDeleteButton();
+        assertTrue(homePage.leftPanelPage.isProjectDeleted("my project"));
     }
 
-    @AfterMethod
-    public void deleteProject() {
-        System.out.println("AfterMethod - loginSite");
-
+    @Test(groups = {"projects", "createProject","deleteProject"})
+    public void testUpdateProject() throws InterruptedException {
+        homePage.leftPanelPage.clickProjectMenu("my project");
+        Thread.sleep(2000);
+        AddProjectModalPage addProjectModalPage = homePage.leftPanelPage.selectEditOption();
+        Thread.sleep(2000);
+        addProjectModalPage.selectBoardRadioButton();
+        Thread.sleep(2000);
+        addProjectModalPage.clickAddButton();
+        Thread.sleep(2000);
+        ContentAreaPage contentAreaPage = homePage.leftPanelPage.clickProject("my project");
+        Thread.sleep(2000);
+        assertTrue(contentAreaPage.isProjectNameDisplayed("my project"));
     }
-
 }
