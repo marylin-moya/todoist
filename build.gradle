@@ -11,15 +11,16 @@ repositories {
 
 dependencies {
     implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
-    testImplementation 'org.testng:testng:7.3.0'
     implementation 'com.google.guava:guava:30.1-jre'
+    testImplementation 'org.testng:testng:7.3.0'
+    implementation 'log4j:log4j:1.2.17'
 }
 
 test {
-    print browser
     systemProperty "browser", browser
     systemProperty "site", site
     systemProperty "email", email
     systemProperty "password", password
     useTestNG()
+
 }
