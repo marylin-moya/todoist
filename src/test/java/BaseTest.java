@@ -1,8 +1,5 @@
 import org.apache.log4j.Logger;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.*;
 import pages.AddProjectModalPage;
 import pages.HomePage;
 import pages.LoginPage;
@@ -54,5 +51,10 @@ public class BaseTest {
         homePage.leftPanelPage.clickProjectMenu("my project");
         homePage.leftPanelPage.selectDeleteOption();
         homePage.leftPanelPage.clickDeleteButton();
+    }
+
+    @DataProvider(name = "provider")
+    public Object[][] provide() throws Exception {
+        return new Object[][]{{"my project"}};
     }
 }

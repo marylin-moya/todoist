@@ -12,10 +12,9 @@ import static org.testng.Assert.assertTrue;
 public class ProjectsTests extends BaseTest {
     public Logger log = Logger.getLogger(getClass());
 
-    @Test(groups = {"projects","deleteProject"})
-    public void testCreateProject() throws InterruptedException {
+    @Test(groups = {"projects","deleteProject"}, dataProvider = "provider")
+    public void testCreateProject(String projectName) throws InterruptedException {
         log.info("Test Create Project");
-        String projectName = "my project";
 
         AddProjectModalPage addProjectModalPage = homePage.leftPanelPage.clickQuickAddProject();
         addProjectModalPage.setProjectName(projectName);
@@ -23,17 +22,20 @@ public class ProjectsTests extends BaseTest {
         assertTrue(homePage.contentAreaPage.isProjectNameDisplayed(projectName));
     }
 
-    @Test(groups = {"projects", "createProject"})
-    public void testDeleteProject() throws InterruptedException {
-        homePage.leftPanelPage.clickProjectMenu("my project");
+    //GIVEN
+    @Test(groups = {"projects", "createProject"}, dataProvider = "provider")
+    public void testDeleteProject(String projectName) throws InterruptedException {
+        //WHEN
+        homePage.leftPanelPage.clickProjectMenu(projectName);
         homePage.leftPanelPage.selectDeleteOption();
         homePage.leftPanelPage.clickDeleteButton();
-        assertTrue(homePage.leftPanelPage.isProjectDeleted("my project"));
+        //THEN
+        assertTrue(homePage.leftPanelPage.isProjectDeleted(projectName));
     }
 
-    @Test(groups = {"projects", "createProject","deleteProject"})
-    public void testUpdateProject() throws InterruptedException {
-        homePage.leftPanelPage.clickProjectMenu("my project");
+    @Test(groups = {"projects", "createProject","deleteProject"}, dataProvider = "provider")
+    public void testUpdateProject(String projectName) throws InterruptedException {
+        homePage.leftPanelPage.clickProjectMenu(projectName);
         Thread.sleep(2000);
         AddProjectModalPage addProjectModalPage = homePage.leftPanelPage.selectEditOption();
         Thread.sleep(2000);
@@ -41,8 +43,8 @@ public class ProjectsTests extends BaseTest {
         Thread.sleep(2000);
         addProjectModalPage.clickAddButton();
         Thread.sleep(2000);
-        ContentAreaPage contentAreaPage = homePage.leftPanelPage.clickProject("my project");
+        ContentAreaPage contentAreaPage = homePage.leftPanelPage.clickProject(projectName);
         Thread.sleep(2000);
-        assertTrue(contentAreaPage.isProjectNameDisplayed("my project"));
+        assertTrue(contentAreaPage.isProjectNameDisplayed(projectName));
     }
 }
