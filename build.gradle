@@ -19,7 +19,7 @@ dependencies {
     implementation group: 'io.cucumber', name: 'cucumber-testng', version: '6.10.2'
 
 }
-
+//Default test
 test {
     systemProperty "browser", browser
     systemProperty "site", site
@@ -27,4 +27,24 @@ test {
     systemProperty "password", password
     useTestNG()
     scanForTestClasses = false
+}
+
+//Custom task
+task runFeatures (type: Test) {
+    systemProperty "browser", browser;
+    systemProperty "site", site;
+    systemProperty "email", email
+    systemProperty "password", password
+
+    useTestNG()
+
+    options {
+        jvmArgs = ['-Dcucumber.options = ' +
+                           '--glue todoist.org ' +
+                           '--plugin pretty ' +
+                           '--plugin json:build/cucumber/cucumber.json ' +
+                           'classpath:features/login']
+    }
+    testLogging.showStandardStreams = true
+    //scanForTestClasses = false
 }
