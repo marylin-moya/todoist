@@ -19,19 +19,27 @@ public class LoginSteps {
     private LoginPage loginPage;
     private HomePage homePage;
 
+    public LoginSteps(HomePage homePage) {
+        this.homePage = homePage;
+    }
+
     @Given("^I navigate to Todoist Login page$")
     public void navigateToTodoistLoginPage() {
         log.info("Navigate to Todoist Login page");
-        DriverManager.getInstance().setUrl(GradleProperties.getInstance().getSite());
-        loginPage = new LoginPage();
+        if (!DriverManager.getInstance().getCurrentUrl().contains("https://todoist.com/app/")) {
+            DriverManager.getInstance().setUrl(GradleProperties.getInstance().getSite());
+            loginPage = new LoginPage();
+        }
     }
 
     @When("^I login to Todoist as \"(.*?)\" with password \"(.*?)\"$")
     public void loginToTodoist(String email, String password) {
-        log.info("Type emai, password and click on login button");
-        loginPage.setEmail(email);
-        loginPage.setPassword(password);
-        homePage = loginPage.clickLoginButton();
+        if (!DriverManager.getInstance().getCurrentUrl().contains("https://todoist.com/app/")) {
+            log.info("Type emai, password and click on login button");
+            loginPage.setEmail(email);
+            loginPage.setPassword(password);
+            homePage = loginPage.clickLoginButton();
+        }
     }
 
     @Then("^I should login to Todoist successfully$")
@@ -48,18 +56,19 @@ public class LoginSteps {
 
 
     @Then("^I make this step fail the first time$")
-    public void stepToFail1(){
+    public void stepToFail1() {
         System.out.println("This step is going to fail #1");
         assertTrue(false);
     }
+
     @Then("^I make this step pass the first time$")
-    public void stepToPass1(){
+    public void stepToPass1() {
         System.out.println("This step is going to pass #1");
         assertTrue(true);
     }
 
     @Then("^I make this step fail the second time$")
-    public void stepToFail2(){
+    public void stepToFail2() {
         System.out.println("This is going to fail #2");
         assertFalse(true);
     }

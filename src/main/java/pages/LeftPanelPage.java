@@ -68,7 +68,10 @@ public class LeftPanelPage extends BasePage {
         hoverProjects(projectOptions);
         By projectMenuBy = By.xpath(String.format(projectMenu, projectName));
         wait.until(ExpectedConditions.visibilityOfElementLocated(projectMenuBy));
+        wait.until(ExpectedConditions.elementToBeClickable(projectMenuBy));
         driver.findElement(projectMenuBy).click();
+        By menuHidden = By.xpath("//div[@class='ist_menu' and not(contains(@style,'display: none'))]");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(menuHidden));
     }
 
     public void selectDeleteOption() {
