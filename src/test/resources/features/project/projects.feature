@@ -1,3 +1,4 @@
+@Project
 Feature: Projects
   CRUD
 

@@ -1,11 +1,9 @@
+package todoist.org.testng;
+
 import org.apache.log4j.Logger;
-import org.openqa.selenium.WebElement;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.AddProjectModalPage;
 import pages.ContentAreaPage;
-import utils.GradleProperties;
 
 import static org.testng.Assert.assertTrue;
 

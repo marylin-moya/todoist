@@ -1,3 +1,5 @@
+package todoist.org.testng;
+
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 import pages.HomePage;

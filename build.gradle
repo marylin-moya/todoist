@@ -1,5 +1,9 @@
+import net.masterthought.cucumber.Configuration
+import net.masterthought.cucumber.ReportBuilder
+
 plugins {
     id 'java'
+    id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.2"
 }
 
 group 'todoist.org'
@@ -17,9 +21,27 @@ dependencies {
     implementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.2'
     testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.2'
     implementation group: 'io.cucumber', name: 'cucumber-testng', version: '6.10.2'
-
+    implementation group: 'net.masterthought', name: 'cucumber-reporting', version: '5.5.2'
 }
-//Default test
+
+//Generate a HTML report given a json result file
+def generateReport(String pathReport, String pathCucumber) {
+    println '>>>>Generate the HTML Report<<<<'
+    File jsonFile = new File(pathCucumber)
+    if (jsonFile.exists()) {
+        println '>>>>JSON file existe<<<<'
+        File reportOutputDirectory = new File(pathReport)
+        List<String> jsonReportFiles = new ArrayList<>()
+        jsonReportFiles.add(pathCucumber)
+        String buildProjectName = 'todoist'
+
+        Configuration configuration = new Configuration(reportOutputDirectory, buildProjectName)
+        ReportBuilder reportBuilder = new ReportBuilder(jsonReportFiles, configuration)
+        reportBuilder.generateReports()
+    }
+}
+
+//Default test -> Run all cucumber tests
 test {
     systemProperty "browser", browser
     systemProperty "site", site
@@ -29,22 +51,87 @@ test {
     scanForTestClasses = false
 }
 
-//Custom task
-task runFeatures (type: Test) {
+//Run Cucumber task changing the arguments
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+//Configure the tags in gradle.properties
+task cucumberTags() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty',
+                    '--plugin', 'json:build/cucumber/cucumber.json',
+                    '--glue', 'todoist.org',
+                    '--tags', tags,
+                    'src/test/resources/features']
+        }
+    }
+}
+
+//Configure the feature in gradle.properties.
+//If you will send more than one feature you will require extra logic to do that
+task cucumberFeatures() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty',
+                    '--plugin', 'json:build/cucumber/cucumber.json',
+                    '--glue', 'todoist.org',
+                  'classpath:'+features]
+//                  'src/test/resources/features/login','src/test/resources/features/project']
+//                    'classpath:features/login','classpath:features/project']
+        }
+    }
+}
+
+//Task to generate the report
+task reportes (){
+    generateReport("build/cucumber/reports", "build/cucumber/cucumber.json")
+}
+
+//Task to run the features according to the Cucumber options - JVMArgs does not work
+task runFeatures(type: Test) {
+
     systemProperty "browser", browser;
     systemProperty "site", site;
     systemProperty "email", email
     systemProperty "password", password
 
-    useTestNG()
-
     options {
-        jvmArgs = ['-Dcucumber.options = ' +
-                           '--glue todoist.org ' +
-                           '--plugin pretty ' +
-                           '--plugin json:build/cucumber/cucumber.json ' +
-                           'classpath:features/login']
+        jvmArgs = ["-DCucumber.Options='" +
+                           "--glue todoist.org " +
+                           "--plugin pretty " +
+                           "--plugin json:build/cucumber/cucumber.json " +
+                           "src/test/resources/features/login'"]
     }
+
+    for (String jvmArg : getAllJvmArgs()) {
+        println '*******' + jvmArg + '*******'
+    }
+
+    useTestNG(){
+        preserveOrder true
+        groupByInstances = true
+        useDefaultListeners = false
+        outputDirectory = file('build/testngOutput')
+    }
+    reports.html.enabled = false
     testLogging.showStandardStreams = true
-    //scanForTestClasses = false
+    scanForTestClasses = true
+
+    exclude 'testng'
+
 }
+
+
+
+
+
